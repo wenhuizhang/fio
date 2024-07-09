@@ -22,6 +22,43 @@ that setting is given.  The typical use of fio is to write a job file matching
 the I/O load one wants to simulate.
 
 
+
+
+TEST
+------
+
+```
+OUTPUT=/mnt/vdb/test
+READ_TEST=("read" "randread")
+WRITE_TEST=("write" "randwrite")
+BLOCK_SIZE=("4k" "1M" "16M")
+DIRECTORY=/mnt/vdb
+
+set -m
+set -x
+
+for TEST in "${READ_TEST[@]}"
+do
+        for BLOCK in "${BLOCK_SIZE[@]}"
+        do
+                echo "$TEST.$BLOCK"
+                fio --name=$TEST.$BLOCK --directory=$DIRECTORY --output=$OUTPUT/$TEST.$BLOCK.log --ioengine=libaio --direct=1 --thread=8 --numjobs=15 --iodepth=1 --rw=$TEST --bs=$BLOCK --size=8GB --norandommap=1 --randrepeat=0 --invalidate=1 --iodepth_batch=1 --sync=1 --scramble_buffers=0 --numa_cpu_nodes=0 --numa_mem_policy=bind:0 --cpus_allowed_policy=split --group_reporting=1
+                rm -rf $DIRECTORY/*.0
+        done
+done
+
+for TEST in "${WRITE_TEST[@]}"
+do
+        for BLOCK in "${BLOCK_SIZE[@]}"
+        do
+                echo "$TEST.$BLOCK"
+                fio --name=$TEST.$BLOCK --directory=$DIRECTORY --output=$OUTPUT/$TEST.$BLOCK.log --ioengine=libaio --direct=1 --thread=1 --numjobs=120 --iodepth=1 --rw=$TEST --bs=$BLOCK --size=1GB --norandommap=1 --randrepeat=0 --invalidate=1 --iodepth_batch=1 --sync=1 --scramble_buffers=0 --numa_cpu_nodes=0 --numa_mem_policy=bind:0 --cpus_allowed_policy=split --group_reporting=1
+                rm -rf $DIRECTORY/*.0
+        done
+done
+```
+
+
 Source
 ------
 
