@@ -27,7 +27,8 @@ the I/O load one wants to simulate.
 TEST
 ------
 
-```
+```bash
+
 OUTPUT=/mnt/vdb/test
 READ_TEST=("read" "randread")
 WRITE_TEST=("write" "randwrite")
