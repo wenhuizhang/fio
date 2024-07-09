@@ -27,7 +27,7 @@ the I/O load one wants to simulate.
 TEST
 ------
 
-```bash
+.. code-block:: console
 
 OUTPUT=/mnt/vdb/test
 READ_TEST=("read" "randread")
@@ -57,7 +57,7 @@ do
                 rm -rf $DIRECTORY/*.0
         done
 done
-```
+
 
 
 Source
